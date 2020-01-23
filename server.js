@@ -33,17 +33,17 @@ app.get("/api/notes", function(req, res) {
 
 // POST route
 app.post("/api/notes", function(req, res) {
-    // These 2 lines pull the data from db.json and put it
+    // These lines 39-40 pull the data from db.json and put it
     // into an array which the new note will pushed to.
     // This way the new note doesn't replace what is already in db.json
     const savedNotes = fs.readFileSync("./db/db.json");
     let noteArr = JSON.parse(savedNotes);
-
+    //new note
     const newNote = {
         title: req.body.title,
         text: req.body.text
     };
-    
+    //rewriting db.json to include new note
     noteArr.push(newNote);
     fs.writeFile("./db/db.json", JSON.stringify(noteArr), () => {
         console.log(newNote.title + " added to note DataBase");
@@ -51,6 +51,15 @@ app.post("/api/notes", function(req, res) {
     res.json(newNote);
 });
 
+//DELETE Route
+app.delete("/api/notes/:title"), function(req, res) {
+    const savedNotes = fs.readFileSync("./db/db.json");
+    let noteArr = JSON.parse(savedNotes);
+    const deletedNote = indexof(req.params.title);
+    console.log(deletedNote)
+    noteArr.splice(deletedNote,1);
+    fs.writeFile("./db/db.json", JSON.stringify(noteArr))
+}
 
 // Starts the server to begin listening
 // =============================================================
