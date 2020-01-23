@@ -33,16 +33,20 @@ app.get("/api/notes", function(req, res) {
 
 // POST route
 app.post("/api/notes", function(req, res) {
-    let noteArr = []
+    // These 2 lines pull the data from db.json and put it
+    // into an array which the new note will pushed to.
+    // This way the new note doesn't replace what is already in db.json
     const savedNotes = fs.readFileSync("./db/db.json");
-    noteArr.push(savedNotes);
+    let noteArr = JSON.parse(savedNotes);
 
     const newNote = {
         title: req.body.title,
         text: req.body.text
     };
-    fs.writeFile("./db/db.json", JSON.stringify(newNote), () => {
-        console.log(req.body.title + " added to note DataBase");
+    
+    noteArr.push(newNote);
+    fs.writeFile("./db/db.json", JSON.stringify(noteArr), () => {
+        console.log(newNote.title + " added to note DataBase");
       });
     res.json(newNote);
 });
